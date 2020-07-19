@@ -1,39 +1,77 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
-#include <QMainWindow>
-
-
 #define GRAV 10
 #define TIME 0.1
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QTimer>
 #include <QFile>
+#include "crear.h"
+#include "graficar.h"
 #include<stdlib.h>
 #include<time.h>
-#include "obstaculocuadrado.h"
-#include "mas.h"
+#include "objetocircular.h"
+#include "objetocuadrado.h"
 
-
-
-
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+namespace Ui {
+class MainWindow;
+}
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private slots:
+    void actualizar();
+    bool objColision(crear *b, crear *b2);
+    void nivelN();
+    void mover();
+     void posicion();
+
+    void on_pushButton_clicked();
+
+    void on_potencia_valueChanged(int value);
+
+    void on_angulo_valueChanged(int value);
+
+    void on_reiniciar_clicked();
+
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsScene *scene;
-    cuadrado *obstaculo1;
-    pendulo *obstaculo2;
+    QTimer *timer;              //timer para los intervalos de tiempo entre cada frame
+    QTimer *timer2;
+    QTimer *timer3;
+    QTimer *timer4;
+    QGraphicsScene *scene;      //scene que muestra los objetos animados
+    float dt;                   //intervalo de tiempo entre frames
+    int h_limit;                //longitud en X del mundo
+    int v_limit;                //longitud en Y del mundo
+    int nivel;
+    int angulo;
+    int potencia;
+    void bordercollision(crear *b);   //metodo para las colisiones con los bordes del mundo
+    graficar*parabolico; //circulo a lanzar con tiro parabolico
+    graficar*objetivo;  //circulo objetivo
+    circulo *obstaculo2; //obstaculo con trayectoria circular
+    float rad;//Ángulo(radianes)
+    float x,y,i;
+    //Datos del circulo con trayectoria de un pendulo
+    double x1_obstaculo3;
+    double x2_obstaculo3;
+    double y1_obstaculo3;
+    double y2_obstaculo3;
+    double radio1_obstaculo3;
+    double radio2_obstaculo3;
+    double cuerda;
+    QGraphicsEllipseItem *obstaculo3;
+    QPen pen;
+    cuadrado obstaculo1; //obstaculo cuadrado
+
 };
+
 #endif // MAINWINDOW_H
