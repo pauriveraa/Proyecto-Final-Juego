@@ -48,16 +48,19 @@ private:
     QTimer *timer3;
     QTimer *timer4;
     QGraphicsScene *scene;      //scene que muestra los objetos animados
+    float puntaje=10;
     float dt;                   //intervalo de tiempo entre frames
     int h_limit;                //longitud en X del mundo
     int v_limit;                //longitud en Y del mundo
     int nivel;
+    int prueba=0;
     int angulo;
     int potencia;
     void bordercollision(crear *b);   //metodo para las colisiones con los bordes del mundo
     graficar*parabolico; //circulo a lanzar con tiro parabolico
     graficar*objetivo;  //circulo objetivo
     circulo *obstaculo2; //obstaculo con trayectoria circular
+    cuadrado *obstaculo1; //obstaculo cuadrado
     float rad;//Ángulo(radianes)
     float x,y,i;
     //Datos del circulo con trayectoria de un pendulo
@@ -70,8 +73,9 @@ private:
     double cuerda;
     QGraphicsEllipseItem *obstaculo3;
     QPen pen;
-    cuadrado obstaculo1; //obstaculo cuadrado
+    bool collide;
 
 };
 
 #endif // MAINWINDOW_H
+

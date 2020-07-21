@@ -23,11 +23,11 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->setSceneRect(-300,-300,1800,900); // Set del retangulo de la escena con los parametros (x,y,ancho,alto)
     scene->addRect(scene->sceneRect());
     ui->graphicsView->setScene(scene);
-            qDebug()<<ui->graphicsView->size();
+    qDebug()<<ui->graphicsView->size();
     //ui->centralWidget->adjustSize();
-         //   qDebug()<<ui->centralWidget->size();
+   // qDebug()<<ui->centralWidget->size();
 
-        this->resize(640, 480);
+    this->resize(640, 480);
     qDebug()<<this->size();
     //scene->addRect(scene->sceneRect());
 
@@ -36,6 +36,12 @@ MainWindow::MainWindow(QWidget *parent) :
     objetivo= new graficar(500,100, 50, 0,0,50,0,0);
     objetivo->actualizar(dt,v_limit);
     scene->addItem(objetivo);
+
+
+
+//////////////////Agrego un lcd para mostrar puntaje////////////////////
+
+     ui->lcdNumber->display(puntaje);
 
 /////////////////////////////pendulo//////////////////////////////////////////////////////
 
@@ -48,7 +54,6 @@ MainWindow::MainWindow(QWidget *parent) :
      radio2_obstaculo3 = 15.0;
      obstaculo3 = scene->addEllipse(x1_obstaculo3+200,  y1_obstaculo3,radio1_obstaculo3, radio2_obstaculo3, pen, brush);
      cuerda = sqrt(pow(x1_obstaculo3 - x2_obstaculo3, 2.0)+ pow(y1_obstaculo3 - y2_obstaculo3, 2.0));
-
      connect(timer3,SIGNAL(timeout()),this,SLOT(mover()));
      timer3->start(20);
 
@@ -71,11 +76,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer,SIGNAL(timeout()),this,SLOT(actualizar()));
 
 ////////////////////////////////objeto cuadrado/////////////////////////////////////////////
+    obstaculo1 = new cuadrado;
+    obstaculo1->valores(-150,250,20,20);
+    scene->addItem(obstaculo1);
 
-    obstaculo1.valores(-150,250,20,20);
-    scene->addItem(&obstaculo1);
-
-
+//////////////////////////////////////////////////////////////
 
 }
 
@@ -121,7 +126,6 @@ void MainWindow::nivelN()
 {
     if(objColision(parabolico->getEsf(), objetivo->getEsf())==true){
         nivel++;
-        ui->vida->setValue(100);
 
         delete objetivo;
 
@@ -133,18 +137,25 @@ void MainWindow::nivelN()
              objetivo=new graficar(200,100, 25, 0,0,50,0.5,0);
              objetivo->actualizar(dt,v_limit);
              scene->addItem(objetivo);
+             puntaje=puntaje+100;
+             ui->lcdNumber->display(puntaje);
         }
+
         if(nivel==3){
             objetivo=new graficar(200,100, 50, 0,20,50,1,0);
             objetivo->getEsf()->setVel(0, 50);
             objetivo->actualizar(dt,v_limit);
             scene->addItem(objetivo);
+            puntaje=puntaje+100;
+            ui->lcdNumber->display(puntaje);
         }
         if(nivel==4){
             objetivo=new graficar(300,100, 13, 0,20,50,1,0);
             objetivo->getEsf()->setVel(10, 50);
             objetivo->actualizar(dt,v_limit);
             scene->addItem(objetivo);
+            puntaje=puntaje+100;
+            ui->lcdNumber->display(puntaje);
         }
         if(nivel==5){
             objetivo=new graficar(200,100, 10, 10,20,50,1,0);
@@ -153,7 +164,36 @@ void MainWindow::nivelN()
             scene->addItem(objetivo);
         }
     }
+
+    collide=parabolico->collidesWithItem(obstaculo1);
+    if(collide==true){
+
+        parabolico->getEsf()->setPoint(10,10);
+
+        parabolico->setVxi(0);
+        parabolico->setVyi(0);
+    }
+
+    collide=parabolico->collidesWithItem(obstaculo3);
+    if(collide==true){
+
+        parabolico->getEsf()->setPoint(10,10);
+
+        parabolico->setVxi(0);
+        parabolico->setVyi(0);
+    }
+    collide=parabolico->collidesWithItem(obstaculo2);
+    if(collide==true){
+
+
+        parabolico->getEsf()->setPoint(10,10);
+
+        parabolico->setVxi(0);
+        parabolico->setVyi(0);
+    }
 }
+
+
 
 void MainWindow::bordercollision(crear *b)
 {
@@ -185,10 +225,7 @@ void MainWindow::on_pushButton_clicked()
     parabolico->setVyi(vyi*2);
     parabolico->actualizar(dt,v_limit);
     scene->addItem(parabolico);
-    ui->vida->setValue(ui->vida->value()-25);
-    if(ui->vida->value()==0){
-        timer->stop();
-    }
+    //timer->stop();
 }
 
 void MainWindow::on_potencia_valueChanged(int value)
@@ -211,7 +248,6 @@ void MainWindow::on_reiniciar_clicked()
     objetivo= new graficar(200,100, 50, 0,0,50,0,0);
     objetivo->actualizar(dt,v_limit);
     scene->addItem(objetivo);
-    ui->vida->setValue(100);
 }
 void MainWindow::posicion(void)
 {
@@ -221,7 +257,6 @@ void MainWindow::posicion(void)
     y=-1*r*sin(i*2);
     obstaculo2->setPos(x+300,y+100);//Cambia la posición del circulo 1 con x y y
 
-   //Cambia la posición del circulo 2
 
 }
 
