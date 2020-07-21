@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 ////////////////////////////objetivo//////////////////////////////////////////////////////
 
-    objetivo= new graficar(500,100, 50, 0,0,50,0,0);
+    objetivo= new graficar(200,100, 50, 0,0,50,0,0);
     objetivo->actualizar(dt,v_limit);
     scene->addItem(objetivo);
 
@@ -80,7 +80,14 @@ MainWindow::MainWindow(QWidget *parent) :
     obstaculo1->valores(-150,250,20,20);
     scene->addItem(obstaculo1);
 
-//////////////////////////////////////////////////////////////
+/////////////////////Dejo de mostrar esto en el mainwindow con .hide()/////////////////////////
+
+    ui->graphicsView->hide();
+    ui->lcdNumber->hide();
+    ui->pushButton->hide();
+    ui->reiniciar->hide();
+    ui->potencia->hide();
+    ui->angulo->hide();
 
 }
 
@@ -162,6 +169,9 @@ void MainWindow::nivelN()
             objetivo->getEsf()->setVel(0, 50);
             objetivo->actualizar(dt,v_limit);
             scene->addItem(objetivo);
+            msgBox.setText("YOU WIN");
+            msgBox.exec();
+            close();
         }
     }
 
@@ -274,4 +284,23 @@ void MainWindow::mover(){
     y1_obstaculo3 = cuerda * cos(angle);
     obstaculo3->setPos(x1_obstaculo3 - 200, y1_obstaculo3);
 
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+
+    ui->graphicsView->show();
+    ui->lcdNumber->show();
+    ui->pushButton->show();
+    ui->reiniciar->show();
+    ui->potencia->show();
+    ui->angulo->show();
+    ui->pushButton_2->hide();
+    ui->pushButton_3->hide();
+
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+     close();
 }

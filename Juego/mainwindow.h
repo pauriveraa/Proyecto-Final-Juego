@@ -12,6 +12,7 @@
 #include<time.h>
 #include "objetocircular.h"
 #include "objetocuadrado.h"
+#include <QMessageBox>
 
 namespace Ui {
 class MainWindow;
@@ -40,6 +41,10 @@ private slots:
 
     void on_reiniciar_clicked();
 
+
+    void on_pushButton_2_clicked();
+
+    void on_pushButton_3_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -74,6 +79,7 @@ private:
     QGraphicsEllipseItem *obstaculo3;
     QPen pen;
     bool collide;
+    QMessageBox msgBox;
 
 };
 
