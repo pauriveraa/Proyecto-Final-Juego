@@ -8,12 +8,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     x=y=i=0;
-     rad=0.01745329252;
+    rad=0.01745329252;
     potencia=0;
     dt=0.01;
     h_limit=900;
     v_limit=300;
     nivel=1;
+
 ////////////////////////////Tiempos y escena///////////////////////////////////////////////
 
     timer=new QTimer(this);                 //crea el timer
@@ -24,12 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addRect(scene->sceneRect());
     ui->graphicsView->setScene(scene);
     qDebug()<<ui->graphicsView->size();
-    //ui->centralWidget->adjustSize();
-   // qDebug()<<ui->centralWidget->size();
-
     this->resize(640, 480);
     qDebug()<<this->size();
-    //scene->addRect(scene->sceneRect());
 
 ////////////////////////////objetivo//////////////////////////////////////////////////////
 
@@ -47,7 +44,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 /////////////////////////////pendulo//////////////////////////////////////////////////////
 
-     QBrush brush(Qt::black);
+     QBrush brush(Qt::black); //pintar el objeto
      x1_obstaculo3 = 200.0;
      y1_obstaculo3 = 0.0;
      x2_obstaculo3 = 0.0;
@@ -73,11 +70,11 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->addItem(obstaculo2);
     timer2->start(12);
     connect(timer2,SIGNAL(timeout()),this,SLOT(posicion()));
-
     timer->stop();                              //para el timer
     connect(timer,SIGNAL(timeout()),this,SLOT(actualizar()));
 
 ////////////////////////////////objeto cuadrado/////////////////////////////////////////////
+
     obstaculo1 = new cuadrado;
     obstaculo1->valores(230,240,20,20);
     scene->addItem(obstaculo1);
@@ -105,27 +102,11 @@ void MainWindow::actualizar()
     bordercollision(parabolico->getEsf());
     parabolico->actualizar(dt,v_limit);
 
-//    if(nivel==3){
-//        objetivo->getEsf()->setA(0,0);
-//        bordercollision(objetivo->getEsf());
-//        objetivo->actualizar(dt,v_limit);
-//    }
-//    if(nivel==4){
-//        objetivo->getEsf()->setA(0,0);
-//        bordercollision(objetivo->getEsf());
-//        objetivo->actualizar(dt,v_limit);
 
-//    }
-//    if(nivel==5){
-//        objetivo->getEsf()->setA(0,0);
-//        bordercollision(objetivo->getEsf());
-//        objetivo->actualizar(dt,v_limit);
-
-//    }
     nivelN();
 }
 
-bool MainWindow::objColision(crear *b, crear *b2)
+bool MainWindow::objColision(crear *b, crear *b2) //Recibo el objeto 1 y 2 para analizarlos y los guardo en b y b2
 {
     if(sqrt(((b->getX()-b2->getX())*((b->getX())-b2->getX()))+((b->getY()-b2->getY())*(b->getY()-b2->getY())))<= b->getR()+b2->getR())
         return true;
@@ -181,25 +162,6 @@ void MainWindow::nivelN()
     }
 
     ui->lcdNumber_2->display(contdisparos);
-    collide=parabolico->collidesWithItem(obstaculo1);
-    if(collide==true){
-
-        parabolico->getEsf()->setPoint(10,10);
-
-        parabolico->setVxi(0);
-        parabolico->setVyi(0);
-        if(contdisparos==0){
-            auxiliar= auxiliar+1;
-
-            if(contdisparos==0 && auxiliar ==2){
-
-                timer->stop();
-                msgBox.setText("YOU LOSS murito");
-                msgBox.exec();
-                close();
-            }
-        }
-    }
 
  //////////////////////Colision con pendulo///////////////////////////
 
@@ -222,8 +184,6 @@ void MainWindow::nivelN()
 
             }
 
-
-
         }
     }
 
@@ -237,16 +197,23 @@ void MainWindow::nivelN()
 
         parabolico->setVxi(0);
         parabolico->setVyi(0);
+        if(contdisparos==0){
+            auxiliar= auxiliar+1;
+
+            if(contdisparos==0 && auxiliar ==2){
+
+                timer->stop();
+                msgBox.setText("YOU LOSS orbita");
+                msgBox.exec();
+                close();
+
+            }
+
+        }
     }
 
-    collide=parabolico->collidesWithItem(obstaculo3);
-    if(collide==true){
+////////////////////////Colison con el circulo ///////////////////////////////
 
-        parabolico->getEsf()->setPoint(10,10);
-
-        parabolico->setVxi(0);
-        parabolico->setVyi(0);
-    }
     collide=parabolico->collidesWithItem(obstaculo2);
     if(collide==true){
 
@@ -255,33 +222,20 @@ void MainWindow::nivelN()
 
         parabolico->setVxi(0);
         parabolico->setVyi(0);
-    }
+        if(contdisparos==0){
+            auxiliar= auxiliar+1;
 
+            if(contdisparos==0 && auxiliar ==2){
 
-////////////////////////Colision con circulo ////////////////////////////////////
+                timer->stop();
+                msgBox.setText("YOU LOSS orbita");
+                msgBox.exec();
+                close();
 
-collide=parabolico->collidesWithItem(obstaculo3);
-if(collide==true){
-
-
-    parabolico->getEsf()->setPoint(10,10);
-
-    parabolico->setVxi(0);
-    parabolico->setVyi(0);
-    if(contdisparos==0){
-        auxiliar= auxiliar+1;
-
-        if(contdisparos==0 && auxiliar ==2){
-
-            timer->stop();
-            msgBox.setText("YOU LOSS orbita");
-            msgBox.exec();
-            close();
+            }
 
         }
-
     }
-}
 }
 
 ////////////////////////////////////////////////////////////////
@@ -293,8 +247,6 @@ void MainWindow::bordercollision(crear *b)
         b->setPoint(b->getR(),b->getY());
     }
     else if(b->getX()>=h_limit-b->getR()){
-       // b->setVel(-b->getcRest()*b->getVx(),b->getVy());
-        //b->setPoint(h_limit-b->getR(),b->getY());
         parabolico->getEsf()->setPoint(10,10);
         parabolico->setVxi(0);
         parabolico->setVyi(0);
@@ -351,12 +303,13 @@ void MainWindow::on_pushButton_clicked()
     parabolico->setVyi(vyi*2);
     parabolico->actualizar(dt,v_limit);
     scene->addItem(parabolico);
-    if(contdisparos > 0){
+    if(contdisparos > 0){   //Descontar disparos
     contdisparos=contdisparos-1;}
 
     ui->lcdNumber_2->display(contdisparos);
+
     if(contdisparos==1){
-        auxiliar=1;
+        auxiliar=1; //Es un avisador para que a través de auxiliar acabe la simulación
     }
 
 }
@@ -386,6 +339,7 @@ void MainWindow::on_reiniciar_clicked()
 void MainWindow::posicion(void)
 {
     int r=30;
+
     //Para cambiar giro del objeto 2 (trayectoria circular)
     collide=obstaculo2->collidesWithItem(obstaculo1);
     collide2=obstaculo2->collidesWithItem(obstaculo3);
@@ -399,11 +353,10 @@ void MainWindow::posicion(void)
     if(bandera1==false){
         i+=-rad;
     }
+
     x=-1*r*cos(i*2);
     y=-1*r*sin(i*2);
     obstaculo2->setPos(x+300,y+100);//Cambia la posición del circulo 1 con x y y
-
-
 }
 
 void MainWindow::mover(){

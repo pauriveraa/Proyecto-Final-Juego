@@ -52,7 +52,7 @@ private:
     QTimer *timer3;
     QTimer *timer4;
     QGraphicsScene *scene;      //scene que muestra los objetos animados
-    float puntaje=10;
+    float puntaje=0;
     float dt;                   //intervalo de tiempo entre frames
     int h_limit;                //longitud en X del mundo
     int v_limit;                //longitud en Y del mundo
