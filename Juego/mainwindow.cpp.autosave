@@ -105,23 +105,7 @@ void MainWindow::actualizar()
     bordercollision(parabolico->getEsf());
     parabolico->actualizar(dt,v_limit);
 
-//    if(nivel==3){
-//        objetivo->getEsf()->setA(0,0);
-//        bordercollision(objetivo->getEsf());
-//        objetivo->actualizar(dt,v_limit);
-//    }
-//    if(nivel==4){
-//        objetivo->getEsf()->setA(0,0);
-//        bordercollision(objetivo->getEsf());
-//        objetivo->actualizar(dt,v_limit);
 
-//    }
-//    if(nivel==5){
-//        objetivo->getEsf()->setA(0,0);
-//        bordercollision(objetivo->getEsf());
-//        objetivo->actualizar(dt,v_limit);
-
-//    }
     nivelN();
 }
 

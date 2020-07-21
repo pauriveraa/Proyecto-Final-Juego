@@ -41,7 +41,6 @@ private slots:
 
     void on_reiniciar_clicked();
 
-
     void on_pushButton_2_clicked();
 
     void on_pushButton_3_clicked();
@@ -79,7 +78,11 @@ private:
     QGraphicsEllipseItem *obstaculo3;
     QPen pen;
     bool collide;
+    bool collide2;
     QMessageBox msgBox;
+    int contdisparos=12;
+    bool bandera1=true;
+    int auxiliar=0;
 
 };
 
