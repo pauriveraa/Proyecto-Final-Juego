@@ -53,13 +53,13 @@ private:
     QTimer *timer4;
     QGraphicsScene *scene;      //scene que muestra los objetos animados
     float puntaje=0;
-    float dt;                   //intervalo de tiempo entre frames
+    float t;                   //intervalo de tiempo entre frames
     int h_limit;                //longitud en X del mundo
     int v_limit;                //longitud en Y del mundo
     int nivel;
     int prueba=0;
-    int angulo;
-    int potencia;
+    int angulo; //value
+    int potencia; //value
     void bordercollision(crear *b);   //metodo para las colisiones con los bordes del mundo
     graficar*parabolico; //circulo a lanzar con tiro parabolico
     graficar*objetivo;  //circulo objetivo
@@ -74,9 +74,10 @@ private:
     double y2_obstaculo3;
     double radio1_obstaculo3;
     double radio2_obstaculo3;
-    double cuerda;
+    double magnitud;
     QGraphicsEllipseItem *obstaculo3;
     QPen pen;
+    bool colision;
     bool collide;
     bool collide2;
     QMessageBox msgBox;

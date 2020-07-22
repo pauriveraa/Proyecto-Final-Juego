@@ -1,6 +1,6 @@
 #include "crear.h"
 #include <QDebug>
-#define densidad 1
+//#define densidad 1
 #define pi 3.14
 
 crear::crear(float x, float y, float r, float vxi, float vyi, float m,
@@ -26,14 +26,14 @@ void crear::setPoint(float x, float y)
     py=y;
 }
 
-void crear::actualizar(float dt)
+void crear::actualizar(float t)
 {
-    ax=-densidad*sqrt(pow(vx,2)+pow(vy,2))*cFric*pi*pow(rad,2)*cos(atan2(vy,vx))/(2*masa);
-    ay=(-densidad*sqrt(pow(vx,2)+pow(vy,2))*cFric*pi*pow(rad,2)*sin(atan2(vy,vx))/(2*masa))-20;
-    vx+=ax*dt;
-    vy+=ay*dt;
-    px+=vx*dt+ax*pow(dt,2)/2;
-    py+=vy*dt+ay*pow(dt,2)/2;
+    ax=-sqrt(pow(vx,2)+pow(vy,2))*cFric*pi*pow(rad,2)*cos(atan2(vy,vx))/(2*masa);
+    ay=(-sqrt(pow(vx,2)+pow(vy,2))*cFric*pi*pow(rad,2)*sin(atan2(vy,vx))/(2*masa))-20;
+    vx+=ax*t;
+    vy+=ay*t;
+    px+=vx*t+ax*pow(t,2)/2;
+    py+=vy*t+ay*pow(t,2)/2;
 }
 
 void crear::setVxi(double vxi)
@@ -51,11 +51,6 @@ void crear::setR(double R)
     rad=R;
 }
 
-void crear::setA(double ax, double ay)
-{
-    this->ax=ax;
-    this->ay=ay;
-}
 
 float crear::getX() const
 {

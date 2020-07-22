@@ -4,7 +4,7 @@
 
 circulo::circulo()
 {
-    setFlags(ItemIsMovable);            //Habilitar movimiento con el mouse
+  //  setFlags(ItemIsMovable);            //Habilitar movimiento con el mouse
 }
 
 QRectF circulo::boundingRect() const

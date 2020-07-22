@@ -13,11 +13,11 @@ public:
     float posy;
     float radio;
     float radio2;
-    cuadrado();
+    cuadrado(); //Constructor
     void valores(float x,float y,float r1,float r2);
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    ~cuadrado();
+    ~cuadrado(); //Destructor
 };
 
 #endif // OBJETOCUADRADO_H

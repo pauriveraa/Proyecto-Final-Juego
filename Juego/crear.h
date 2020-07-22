@@ -22,15 +22,15 @@ public:
     ~crear();
     void setVel(float x, float y);          //metodo para asignar la velocidad (en X y en Y)
     void setPoint(float x, float y);        //metodo para asignar la posicion (en X y en Y)
-    void actualizar(float dt);              //metodo que cambia los valores de posicion (realiza el movimiento), recive el lapso de tiempo transcurrido
-    //void setA();
+    void actualizar(float t);              //metodo que cambia los valores de posicion (realiza el movimiento), recibe el lapso de tiempo transcurrido
 
     void setVxi(double vxi);
     void setVyi(double vyi);
     void setR(double R);
     void setA(double ax, double ay);
 
-    float getX() const;                  //metodos para retornar los atributos
+    //metodos para retornar los atributos
+    float getX() const;
     float getY() const;
     float getR() const;
     float getVx() const;

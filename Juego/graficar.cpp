@@ -24,25 +24,24 @@ void graficar::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     painter->drawEllipse(boundingRect());    //dibuja una elipse encerrada en la boundingRect
 }
 
-void graficar::setEscala(float s)
-{
-    escala=s;
-}
 
-void graficar::actualizar(float dt, float v_lim)
+void graficar::actualizar(float t, float v_lim)
 {
-    esf->actualizar(dt);
+    esf->actualizar(t);
     setPos(esf->getX()*escala,(v_lim-esf->getY())*escala);
+    //Muestro la posicón del objeto según la coordenada x con getX y la
+    //posición en y de acuerdo al límite menos la posición en y con getY
 }
 
 crear *graficar::getEsf()
 {
-    return esf;
+    return esf; //Retorna el objeto esf de la clase crear
 }
 
 void graficar::setVxi(double vxi)
 {
     esf->setVxi(vxi);
+    //Le asigno al atributo vx de la clase crear (objeto esf) el valor de vxi
 }
 
 void graficar::setVyi(double vyi)

@@ -8,8 +8,8 @@ class circulo : public QGraphicsItem
 
 public:
     circulo();
-    QRectF boundingRect() const;//Forma
-    QPainterPath shape() const;//Color
+    QRectF boundingRect() const;  //Forma
+    QPainterPath shape() const;   //Color
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void advance(int phase);
 };
