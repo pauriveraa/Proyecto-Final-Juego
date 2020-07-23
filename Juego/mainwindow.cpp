@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 ////////////////////////////objetivo//////////////////////////////////////////////////////
 
-    objetivo= new graficar(400,100, 30, 0,0,50,0,0);
+    objetivo= new graficar(420,100, 30, 0,0,50,0,0);
     objetivo->actualizar(t,v_limit);
     scene->addItem(objetivo);
     timer->stop();                              //para el timer para objetivo y parabolico
@@ -68,16 +68,16 @@ MainWindow::MainWindow(QWidget *parent) :
 ////////////////////////////objeto trayectoria circular ///////////////////////////////////
 
     obstaculo2 = new circulo;
-    scene->addItem(obstaculo2);
+    //scene->addItem(obstaculo2);
     timer2->start(12);
-    connect(timer2,SIGNAL(timeout()),this,SLOT(posicion()));
+    //connect(timer2,SIGNAL(timeout()),this,SLOT(posicion()));
 
 
 ////////////////////////////////objeto cuadrado/////////////////////////////////////////////
 
     obstaculo1 = new cuadrado;
-    obstaculo1->valores(230,240,20,20);
-    scene->addItem(obstaculo1);
+    //obstaculo1->valores(230,240,20,20);
+    //scene->addItem(obstaculo1);
 
 /////////////////////Dejo de mostrar esto en el mainwindow con .hide()/////////////////////////
 
@@ -87,6 +87,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->reiniciar->hide();
     ui->potencia->hide();
     ui->angulo->hide();
+    ui->labelnombre->hide();
+    ui->label->hide();
+    ui->label_2->hide();
+    ui->label_3->hide();
+    ui->lcdNumber_3->hide();
+    ui->label_4->hide();
+    ui->pushButton_2->hide();
+    ui->pushButton_4->hide();
+    ui->lineEdit->hide();
 
 }
 
@@ -119,6 +128,7 @@ void MainWindow::nivelN()
 
     if(objColision(parabolico->getEsf(), objetivo->getEsf())==true){
         contdisparos++;
+        puntaje=puntaje+100;
         nivel++;
 
         delete objetivo;
@@ -131,35 +141,55 @@ void MainWindow::nivelN()
              objetivo=new graficar(400,50, 30, 0,0,50,0.5,0);
              objetivo->actualizar(t,v_limit);
              scene->addItem(objetivo);
-             puntaje=puntaje+100;
+             //puntaje=puntaje+100;
              ui->lcdNumber->display(puntaje);
         }
 
         if(nivel==3){
-            objetivo=new graficar(400,50, 30, 0,0,50,0.5,0);
+            objetivo=new graficar(400,150, 30, 0,0,50,0.5,0);
             //objetivo->getEsf()->setVel(0, 50);
             objetivo->actualizar(t,v_limit);
             scene->addItem(objetivo);
-            puntaje=puntaje+100;
+            //puntaje=puntaje+100;
             ui->lcdNumber->display(puntaje);
         }
         if(nivel==4){
-            objetivo=new graficar(350,100, 25, 0,0,50,0.5,0);
+            objetivo=new graficar(350,100, 25, 0,0,50,1,0);
             objetivo->getEsf()->setVel(10, 50);
             objetivo->actualizar(t,v_limit);
             scene->addItem(objetivo);
-            puntaje=puntaje+100;
+            //puntaje=puntaje+100;
             ui->lcdNumber->display(puntaje);
             contdisparos=contdisparos+1;
         }
         if(nivel==5){
-            objetivo=new graficar(340,300, 20, 0,0,50,0.5,0);
-            objetivo->getEsf()->setVel(0, 50);
-            objetivo->actualizar(t,v_limit);
-            scene->addItem(objetivo);
-            msgBox.setText("YOU WIN");
-            msgBox.exec();
-            close();
+            ui->lcdNumber->display(puntaje);
+           controldemundos++;
+           if(nivel==5&&controldemundos==4){
+               msgBox.setText("YOU WIN TERMINASTE");
+               msgBox.exec();
+               close();
+           }
+
+           objetivo=new graficar(420,100, 30, 0,0,50,0,0);
+           objetivo->getEsf()->setVel(0, 0);
+           objetivo->actualizar(t,v_limit);
+           scene->addItem(objetivo);
+           if(controldemundos!=4){
+           msgBox.setText("pasaste al siguiente nivel");
+           msgBox.exec();
+           ui->lcdNumber_3->display(controldemundos);
+           }
+           obstaculo1->valores(230,240,20,20);
+           scene->addItem(obstaculo1);
+           nivel=1;
+
+           if(controldemundos==3){
+               scene->addItem(obstaculo2);
+               timer2->start(12);
+               connect(timer2,SIGNAL(timeout()),this,SLOT(posicion()));
+
+           }
         }
     }
 
@@ -180,7 +210,7 @@ void MainWindow::nivelN()
             if(contdisparos==0 && auxiliar ==2){
 
                 timer->stop();
-                msgBox.setText("YOU LOSS pendulito");
+                msgBox.setText("YOU LOSE pendulito");
                 msgBox.exec();
                 close();
 
@@ -205,7 +235,7 @@ void MainWindow::nivelN()
             if(contdisparos==0 && auxiliar ==2){
 
                 timer->stop();
-                msgBox.setText("YOU LOSS orbita");
+                msgBox.setText("YOU LOSE orbita");
                 msgBox.exec();
                 close();
 
@@ -256,7 +286,7 @@ void MainWindow::bordercollision(crear *b)
             if(contdisparos==0 && auxiliar ==2){
 
                 timer->stop();
-                msgBox.setText("YOU LOSS muroderecha");
+                msgBox.setText("YOU LOSE muroderecha");
                 msgBox.exec();
                 close();
                                         }
@@ -275,7 +305,7 @@ void MainWindow::bordercollision(crear *b)
             if(contdisparos==0 && auxiliar ==2){
 
                 timer->stop();
-                msgBox.setText("YOU LOSS muroabajo");
+                msgBox.setText("YOU LOSE muroabajo");
                 msgBox.exec();
                 close();
             }
@@ -289,7 +319,7 @@ void MainWindow::bordercollision(crear *b)
 
 void MainWindow::on_pushButton_clicked()  // Clic en botón RUN
 {
-    timer->start(1000*t);
+    timer->start(500*t);
     parabolico->getEsf()->setPoint(10,10);
     int vxi=potencia*cos(angulo*M_PI/180); //paso a radianes
     int vyi=potencia*sin(angulo*M_PI/180);
@@ -297,6 +327,7 @@ void MainWindow::on_pushButton_clicked()  // Clic en botón RUN
     parabolico->setVyi(vyi*2);
     parabolico->actualizar(t,v_limit);
     scene->addItem(parabolico);
+
     if(contdisparos > 0){   //Descontar disparos
     contdisparos=contdisparos-1;}
 
@@ -321,7 +352,8 @@ void MainWindow::on_angulo_valueChanged(int value)
 void MainWindow::on_reiniciar_clicked()
 {
     nivel=1;
-    contdisparos=6;
+    contdisparos=12;
+    ui->lcdNumber_2->display(contdisparos);
     parabolico->getEsf()->setPoint(10,10);
     parabolico->setVxi(0);
     parabolico->setVyi(0);
@@ -332,7 +364,7 @@ void MainWindow::on_reiniciar_clicked()
 }
 void MainWindow::posicion(void)
 {
-    int r=30;
+    int r=65;
 
     //Para cambiar giro del objeto 2 (trayectoria circular)
     collide=obstaculo2->collidesWithItem(obstaculo1);
@@ -372,19 +404,60 @@ void MainWindow::mover(){
 void MainWindow::on_pushButton_2_clicked()
 {
 
-    ui->graphicsView->show();
-    ui->lcdNumber->show();
-    ui->lcdNumber_2->show();
-    ui->pushButton->show();
-    //ui->reiniciar->show();
-    ui->potencia->show();
-    ui->angulo->show();
+    if(banderaverificador>=1){
+    ui->label_4->show();
+    ui->lcdNumber_3->show();
+    ui->lcdNumber_3->display(controldemundos);
+    ui->label_3->show();
+    ui->lineEdit->hide();
+    ui->pushButton_4->hide();
     ui->pushButton_2->hide();
     ui->pushButton_3->hide();
+    ui->lcdNumber_2->show();
+    ui->graphicsView->show();
+    ui->lcdNumber->show();
+    ui->pushButton->show();
+
+    ui->potencia->show();
+    ui->angulo->show();
+    ui->labelnombre->show();
+    ui->label->show();
+    ui->label_2->show();
+    ui->labelnombre->setText(nombre);
 
 }
+    }
+
 
 void MainWindow::on_pushButton_3_clicked()
 {
-     close();
+    close();
+}
+
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    nombre=ui->lineEdit->text();
+    if(nombre==""){
+    banderaverificador=0;}
+    else{
+        banderaverificador++;
+
+    }
+}
+
+
+void MainWindow::on_pushButton_5_clicked()
+{
+    ui->pushButton_2->show();
+    ui->pushButton_3->show();
+    ui->pushButton_4->show();
+    ui->lineEdit->show();
+    ui->pushButton_5->hide();
+    ui->pushButton_6->hide();
+}
+
+void MainWindow::on_pushButton_6_clicked()
+{
+
 }

@@ -13,6 +13,7 @@
 #include "objetocircular.h"
 #include "objetocuadrado.h"
 #include <QMessageBox>
+#include <QString>
 
 namespace Ui {
 class MainWindow;
@@ -25,7 +26,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
+    QString nombre;
 private slots:
     void actualizar();
     bool objColision(crear *b, crear *b2);
@@ -45,6 +46,12 @@ private slots:
 
     void on_pushButton_3_clicked();
 
+    void on_pushButton_4_clicked();
+
+    void on_pushButton_5_clicked();
+
+    void on_pushButton_6_clicked();
+
 private:
     Ui::MainWindow *ui;
     QTimer *timer;              //timer para los intervalos de tiempo entre cada frame
@@ -57,6 +64,7 @@ private:
     int h_limit;                //longitud en X del mundo
     int v_limit;                //longitud en Y del mundo
     int nivel;
+    int controldemundos=1;
     int prueba=0;
     int angulo; //value
     int potencia; //value
@@ -84,6 +92,7 @@ private:
     int contdisparos=12;
     bool bandera1=true;
     int auxiliar=0;
+    int banderaverificador=0;
 
 };
 
