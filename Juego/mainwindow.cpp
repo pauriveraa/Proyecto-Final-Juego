@@ -83,20 +83,46 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->graphicsView->hide();
     ui->lcdNumber->hide();
+    ui->lcdNumber_2->hide();
+    ui->lcdNumber_3->hide();
+    ui->lcdNumber_5puntaj2->hide();
+    ui->lcdNumber_4puntaje1->hide();
     ui->pushButton->hide();
+    ui->pushButton_2->hide();
+    ui->pushButton_4->hide();
+    ui->REGISTRARVS->hide();
+    ui->disparovs->hide();
     ui->reiniciar->hide();
     ui->potencia->hide();
     ui->angulo->hide();
-    ui->labelnombre->hide();
     ui->label->hide();
     ui->label_2->hide();
     ui->label_3->hide();
-    ui->lcdNumber_3->hide();
     ui->label_4->hide();
-    ui->pushButton_2->hide();
-    ui->pushButton_4->hide();
+    ui->label_5->hide();
+    ui->label_6->hide();
+    ui->label_7->hide();
+    ui->label_8->hide();
+    ui->labelnombre->hide();
+    ui->label_5JUGADOR1->hide();
+    ui->label_6JUGADOR2->hide();
+    ui->lineEdit_2JUGADOR1->hide();
+    ui->lineEdit_3JUGADOR2->hide();
     ui->lineEdit->hide();
+    ui->labelnombre->hide();
 
+
+    ui->contavs->hide();
+    ui->contanivel->hide();
+    ui->labelnombre->setText(nombre);
+    /*
+    ui->label_5JUGADOR1->hide();
+    ui->label_6JUGADOR2->hide();
+    ui->REGISTRARVS->hide();
+    ui->lineEdit_2JUGADOR1->hide();
+    ui->lineEdit_3JUGADOR2->hide();
+    ui->disparovs->hide();
+*/
 }
 
 MainWindow::~MainWindow()
@@ -134,7 +160,6 @@ void MainWindow::nivelN()
         delete objetivo;
 
         parabolico->getEsf()->setPoint(10,10);
-
         parabolico->setVxi(0);
         parabolico->setVyi(0);
         if(nivel==2){
@@ -160,10 +185,10 @@ void MainWindow::nivelN()
             scene->addItem(objetivo);
             //puntaje=puntaje+100;
             ui->lcdNumber->display(puntaje);
-            contdisparos=contdisparos+1;
+            //contdisparos=contdisparos+1;
         }
         if(nivel==5){
-            ui->lcdNumber->display(puntaje);
+           ui->lcdNumber->display(puntaje);
            controldemundos++;
            if(nivel==5&&controldemundos==4){
                msgBox.setText("YOU WIN TERMINASTE");
@@ -176,7 +201,7 @@ void MainWindow::nivelN()
            objetivo->actualizar(t,v_limit);
            scene->addItem(objetivo);
            if(controldemundos!=4){
-           msgBox.setText("pasaste al siguiente nivel");
+           msgBox.setText("Pasaste al siguiente nivel");
            msgBox.exec();
            ui->lcdNumber_3->display(controldemundos);
            }
@@ -193,6 +218,142 @@ void MainWindow::nivelN()
         }
     }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    if(banderaverificadorvs==1 &&objColision(parabolico->getEsf(), objetivo->getEsf())==true){
+
+//        contdisparos1=4;
+//        banderajugador2=1;
+//        nivel1=1;
+//        terminacion=1;
+
+         delete objetivo;
+
+        if(terminacion==1){
+            terminacion=0;
+            contdisparos1=3;
+            banderajugador2=1;
+            ui->contavs->display(contdisparos1);
+            msgBox.setText("si cont es 4 moral");
+            msgBox.exec();
+
+            objetivo= new graficar(420,100, 30, 0,0,50,0,0);
+            objetivo->actualizar(t,v_limit);
+            scene->addItem(objetivo);
+            puntaje1=puntaje1+100;
+            puntaje2=puntaje2-100;
+
+        }
+        if(terminacion==2){
+
+            contdisparos1++;
+            puntaje2=puntaje2+100;
+            objetivo= new graficar(420,100, 30, 0,0,50,0,0);
+            objetivo->actualizar(t,v_limit);
+            scene->addItem(objetivo);
+            if(puntaje1<puntaje2){
+
+                msgBox.setText("GANADOR JUGADOR 2");
+                msgBox.exec();
+                close();
+            } if(puntaje1>puntaje2){
+
+                msgBox.setText("GANADOR JUGADOR 1");
+                msgBox.exec();
+                close();
+
+            } if(puntaje1==puntaje2){
+
+                msgBox.setText("EMPATADOS");
+                msgBox.exec();
+                close();
+            }
+
+        }
+        if(banderajugador2==0){
+        contdisparos1++;
+        puntaje1=puntaje1+100;}
+        if(banderajugador2==1){
+
+            contdisparos1++;
+            puntaje2=puntaje2+100;
+        }
+//        if(banderajugador2==0){
+//        contdisparos1++;
+//        puntaje1=puntaje1+100;}
+//        if(banderajugador2==1){
+
+//            contdisparos1++;
+//            puntaje2=puntaje2+100;
+//        }
+
+        ui->lcdNumber_5puntaj2->display(puntaje2);
+        ui->lcdNumber_4puntaje1->display(puntaje1);
+        nivel1++;
+        ui->contavs->display(contdisparos1);
+        ui->contanivel->display(nivel1);
+      //  ui->vida->setValue(100);  // esto es la supuesta vida, o tiros
+
+
+
+        parabolico->getEsf()->setPoint(10,10);
+
+        parabolico->setVxi(0);
+        parabolico->setVyi(0);
+        if(nivel1==2){
+             objetivo=new graficar(400,50, 30, 0,0,50,0.5,0);
+             objetivo->actualizar(t,v_limit);
+             scene->addItem(objetivo);
+             //puntaje=puntaje+100;
+              //ui->lcdNumber->display(puntaje);
+             ui->contavs->display(contdisparos1);
+             ui->contanivel->display(nivel1);
+
+        }
+        if(nivel1==3){
+            objetivo=new graficar(400,150, 30, 0,0,50,0.5,0);
+            //objetivo->getEsf()->setVel(0, 0);
+            objetivo->actualizar(t,v_limit);
+            scene->addItem(objetivo);
+            //puntaje=puntaje+100;
+             //ui->lcdNumber->display(puntaje);
+            ui->contavs->display(contdisparos1);
+            ui->contanivel->display(nivel1);
+
+
+
+        }
+        if(nivel1==4){
+            objetivo=new graficar(350,100, 25, 0,0,50,1,0);
+            objetivo->getEsf()->setVel(0, 0);
+            objetivo->actualizar(t,v_limit);
+            scene->addItem(objetivo);
+//            if(banderajugador2==0){
+//            msgBox.setText("TURNO JUGADOR 2");
+//            msgBox.exec();}
+
+            ui->contanivel->display(nivel1);
+            nivel1=0;
+            terminacion=1;
+            if(banderajugador2==1){
+                terminacion=2;
+                qDebug()<<terminacion;
+            }
+            if(contdisparos1==0){
+                contdisparos1=4;
+
+            }
+
+            //puntaje=puntaje+100;
+            ui->contavs->display(contdisparos1);
+
+           //ui->lcdNumber->display(puntaje);
+
+        }
+    }
+
+/////////////////////////////////////////////////////////////////////////////////
+
     ui->lcdNumber_2->display(contdisparos);
 
  //////////////////////Colision con pendulo///////////////////////////
@@ -204,7 +365,7 @@ void MainWindow::nivelN()
 
         parabolico->setVxi(0);
         parabolico->setVyi(0);
-        if(contdisparos==0){
+        if(contdisparos==0||contdisparos1==0){
             auxiliar= auxiliar+1;
 
             if(contdisparos==0 && auxiliar ==2){
@@ -215,10 +376,39 @@ void MainWindow::nivelN()
                 close();
 
             }
+            if(contdisparos1==0&&auxiliar==2){
 
+
+                if(banderajugador2==0){
+                msgBox.setText("turno jugador2");
+                msgBox.exec();
+                contdisparos1=4;//recargar
+                banderajugador2=1;
+                nivel1=1;
+                 terminacion=0;
+                delete objetivo;
+                objetivo= new graficar(420,100, 30, 0,0,50,0,0);
+                objetivo->actualizar(t,v_limit);
+                scene->addItem(objetivo);
+                }
+
+
+                if(banderajugador2==1 && puntaje1<puntaje2&&contdisparos1==0){
+                    msgBox.setText("GANADOR JUGADOR 2");
+                    msgBox.exec();
+                    close();
+                } if(banderajugador2==1 && puntaje1>puntaje2&&contdisparos1==0){
+                    msgBox.setText("GANADOR JUGADOR 1");
+                    msgBox.exec();
+                    close();
+                } if(banderajugador2==1 && puntaje1==puntaje2&&contdisparos1==0){
+                    msgBox.setText("EMPATADOS");
+                    msgBox.exec();
+                    close();
+                }
+            }
         }
     }
-
 
  ///////////////////////////////Colision con cuadrado//////////////////
 
@@ -229,7 +419,7 @@ void MainWindow::nivelN()
 
         parabolico->setVxi(0);
         parabolico->setVyi(0);
-        if(contdisparos==0){
+        if(contdisparos==0||contdisparos1==0){
             auxiliar= auxiliar+1;
 
             if(contdisparos==0 && auxiliar ==2){
@@ -240,11 +430,41 @@ void MainWindow::nivelN()
                 close();
 
             }
+            if(contdisparos1==0&&auxiliar==2){
 
+
+                if(banderajugador2==0){
+                msgBox.setText("turno jugador2");
+                msgBox.exec();
+                contdisparos1=4;//recargar
+                banderajugador2=1;
+                nivel1=1;
+                 terminacion=0;
+                delete objetivo;
+                objetivo= new graficar(420,100, 30, 0,0,50,0,0);
+                objetivo->actualizar(t,v_limit);
+                scene->addItem(objetivo);
+                }
+
+
+                if(banderajugador2==1 && puntaje1<puntaje2&&contdisparos1==0){
+                    msgBox.setText("GANADOR JUGADOR 2");
+                    msgBox.exec();
+                    close();
+                } if(banderajugador2==1 && puntaje1>puntaje2&&contdisparos1==0){
+                    msgBox.setText("GANADOR JUGADOR 1");
+                    msgBox.exec();
+                    close();
+                } if(banderajugador2==1 && puntaje1==puntaje2&&contdisparos1==0){
+                    msgBox.setText("EMPATADOS");
+                    msgBox.exec();
+                    close();
+                }
+            }
         }
     }
 
-////////////////////////Colison con el circulo ///////////////////////////////
+////////////////////////Colison con objeto circular ///////////////////////////////
 
     collide=parabolico->collidesWithItem(obstaculo2);
     if(collide==true){
@@ -262,11 +482,40 @@ void MainWindow::nivelN()
                 msgBox.setText("YOU LOSS orbita");
                 msgBox.exec();
                 close();
-            }
+            }if(contdisparos1==0&&auxiliar==2){
 
+                if(banderajugador2==0){
+                msgBox.setText("turno jugador2");
+                msgBox.exec();
+                contdisparos1=4;
+                banderajugador2=1;
+                nivel1=1;
+                 terminacion=0;
+                  delete objetivo;
+                objetivo= new graficar(420,100, 30, 0,0,50,0,0);
+                objetivo->actualizar(t,v_limit);
+                scene->addItem(objetivo);
+                }
+
+                if(banderajugador2==1 && puntaje1<puntaje2&&contdisparos1==0){
+                    msgBox.setText("GANADOR JUGADOR 2");
+                    msgBox.exec();
+                    close();
+                } if(banderajugador2==1 && puntaje1>puntaje2&&contdisparos1==0){
+                    msgBox.setText("GANADOR JUGADOR 1");
+                    msgBox.exec();
+                    close();
+                } if(banderajugador2==1 && puntaje1==puntaje2&&contdisparos1==0){
+                    msgBox.setText("EMPATADOS");
+                    msgBox.exec();
+                    close();
+                }
+            }
         }
-    }
+  }
+
 }
+
 
 /////////////////////////////Colisión con los bordes///////////////////////////////////
 
@@ -280,7 +529,7 @@ void MainWindow::bordercollision(crear *b)
         parabolico->getEsf()->setPoint(10,10); //UBICO EN LA POSICION INICIAL
         parabolico->setVxi(0);
         parabolico->setVyi(0);
-        if(contdisparos==0){
+        if(contdisparos==0||contdisparos1==0){
             auxiliar= auxiliar+1;
 
             if(contdisparos==0 && auxiliar ==2){
@@ -289,9 +538,41 @@ void MainWindow::bordercollision(crear *b)
                 msgBox.setText("YOU LOSE muroderecha");
                 msgBox.exec();
                 close();
-                                        }
-                             }
-    }
+               }
+            if(contdisparos1==0&&auxiliar==2){
+
+             if(banderajugador2==0){
+
+                 msgBox.setText("turno jugador2");
+                 msgBox.exec();
+                 contdisparos1=4;
+                 banderajugador2=1;
+                 nivel1=1;
+                 terminacion=0;
+                 delete objetivo;
+                 objetivo= new graficar(420,100, 30, 0,0,50,0,0);
+                 objetivo->actualizar(t,v_limit);
+                 scene->addItem(objetivo);}
+
+                 if(banderajugador2==1 && puntaje1<puntaje2&&contdisparos1==0){
+                      msgBox.setText("GANADOR JUGADOR 2");
+                      msgBox.exec();
+                      close();
+                      }
+                 if(banderajugador2==1 && puntaje1>puntaje2&&contdisparos1==0){
+                      msgBox.setText("GANADOR JUGADOR 1");
+                      msgBox.exec();
+                      close();
+                      }
+                 if(banderajugador2==1 && puntaje1==puntaje2&&contdisparos1==0){
+                      msgBox.setText("EMPATADOS");
+                      msgBox.exec();
+                      close();
+                      }
+
+             }
+      }
+}
 
     if(b->getY()<=b->getR()){
         b->setVel(b->getVx(),-b->getcRest()*b->getVy());
@@ -309,6 +590,37 @@ void MainWindow::bordercollision(crear *b)
                 msgBox.exec();
                 close();
             }
+            if(contdisparos1==0&&auxiliar==2){
+
+                if(banderajugador2==0){
+                     msgBox.setText("turno jugador2");
+                     msgBox.exec();
+                     contdisparos1=4;
+                     banderajugador2=1;
+                     nivel1=1;
+                     terminacion=0;
+                     delete objetivo;
+                     objetivo= new graficar(420,100, 30, 0,0,50,0,0);
+                     objetivo->actualizar(t,v_limit);
+                     scene->addItem(objetivo);}
+
+                     if(banderajugador2==1 && puntaje1<puntaje2&&contdisparos1==0){
+                         msgBox.setText("GANADOR JUGADOR 2");
+                         msgBox.exec();
+                         close();
+                     }
+                     if(banderajugador2==1 && puntaje1>puntaje2&&contdisparos1==0){
+                         msgBox.setText("GANADOR JUGADOR 1");
+                         msgBox.exec();
+                         close();
+                     }
+                     if(banderajugador2==1 && puntaje1==puntaje2&&contdisparos1==0){
+                         msgBox.setText("EMPATADOS");
+                         msgBox.exec();
+                         close();
+                     }
+
+              }
         }
     }
     else if(b->getY()>=v_limit-b->getR()){ //Colisiona con el limite
@@ -417,12 +729,14 @@ void MainWindow::on_pushButton_2_clicked()
     ui->graphicsView->show();
     ui->lcdNumber->show();
     ui->pushButton->show();
-
     ui->potencia->show();
     ui->angulo->show();
     ui->labelnombre->show();
     ui->label->show();
     ui->label_2->show();
+    ui->label_8->hide();
+    ui->contavs->hide();
+    ui->contanivel->hide();
     ui->labelnombre->setText(nombre);
 
 }
@@ -452,12 +766,74 @@ void MainWindow::on_pushButton_5_clicked()
     ui->pushButton_2->show();
     ui->pushButton_3->show();
     ui->pushButton_4->show();
-    ui->lineEdit->show();
     ui->pushButton_5->hide();
     ui->pushButton_6->hide();
+    ui->lineEdit->show();
+
 }
 
 void MainWindow::on_pushButton_6_clicked()
 {
+    ui->pushButton_6->hide();
+    ui->pushButton_5->hide();
+    ui->pushButton_3->hide();
+    ui->label_5JUGADOR1->show();
+    ui->label_6JUGADOR2->show();
+    ui->REGISTRARVS->show();
+    ui->lineEdit_2JUGADOR1->show();
+    ui->lineEdit_3JUGADOR2->show();
+}
 
+void MainWindow::on_REGISTRARVS_clicked()
+{
+    ui->lineEdit_2JUGADOR1->show();
+    ui->lineEdit_3JUGADOR2->show();
+    ui->contavs->show();
+    ui->contanivel->show();
+    ui->label_5->show();
+    ui->label_6->show();
+    ui->label_7->show();
+    ui->label_8->show();
+    ui->lcdNumber_5puntaj2->show();
+    ui->lcdNumber_4puntaje1->show();
+    jugador1= ui->lineEdit_2JUGADOR1->text();
+    jugador2= ui->lineEdit_3JUGADOR2->text();
+    if(jugador1==""||jugador2==""){
+    banderaverificadorvs=0;
+    msgBox.setText("DEBES REGISTRAR 2 USUARIOS");
+    msgBox.exec();}
+    else{
+        banderaverificadorvs=1;
+        ui->label_5JUGADOR1->hide();
+        ui->label_6JUGADOR2->hide();
+        ui->REGISTRARVS->hide();
+        ui->lineEdit_2JUGADOR1->hide();
+        ui->lineEdit_3JUGADOR2->hide();
+        ui->REGISTRARVS->hide();
+        ui->angulo->show();
+        ui->potencia->show();
+        ui->graphicsView->show();
+        obstaculo1->valores(230,240,20,20);
+        scene->addItem(obstaculo1);
+        ui->disparovs->show();
+       }
+}
+
+void MainWindow::on_disparovs_clicked()
+{
+    timer->start(500*t);
+    parabolico->getEsf()->setPoint(10,10);
+    int vxi=potencia*cos(angulo*M_PI/180);
+    int vyi=potencia*sin(angulo*M_PI/180);
+    parabolico->setVxi(vxi*2);
+    parabolico->setVyi(vyi*2);
+    parabolico->actualizar(t,v_limit);
+    scene->addItem(parabolico);
+    if(contdisparos1 > 0){
+    contdisparos1=contdisparos1-1;}
+
+    // ui->lcdNumber_2->display(contdisparos);
+    if(contdisparos1==1){
+        auxiliar=1;
+    }
 }

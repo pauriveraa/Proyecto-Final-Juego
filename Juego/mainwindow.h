@@ -27,6 +27,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     QString nombre;
+    QString jugador1;
+    QString jugador2;
 private slots:
     void actualizar();
     bool objColision(crear *b, crear *b2);
@@ -51,6 +53,10 @@ private slots:
     void on_pushButton_5_clicked();
 
     void on_pushButton_6_clicked();
+
+    void on_REGISTRARVS_clicked();
+
+    void on_disparovs_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -93,6 +99,17 @@ private:
     bool bandera1=true;
     int auxiliar=0;
     int banderaverificador=0;
+    int banderaverificadorvs=0;
+
+//variables para jugador
+    float puntaje1=0;
+    int nivel1=1;
+    int  contdisparos1=4;
+    ////// variables jugador2
+    int banderajugador2=0;
+    int contdisparos2=0;
+     int puntaje2=0;
+     int terminacion=0;
 
 };
 
