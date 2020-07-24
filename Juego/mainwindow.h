@@ -14,6 +14,12 @@
 #include "objetocuadrado.h"
 #include <QMessageBox>
 #include <QString>
+#include <fstream>
+#include <fstream>
+#include <iostream>
+#include <string.h>
+#include <stdlib.h>
+using namespace std;
 
 namespace Ui {
 class MainWindow;
@@ -58,7 +64,12 @@ private slots:
 
     void on_disparovs_clicked();
 
+    void on_pushButton_7_clicked();
+
+    void on_pushButton_8_clicked();
+
 private:
+    int a;
     Ui::MainWindow *ui;
     QTimer *timer;              //timer para los intervalos de tiempo entre cada frame
     QTimer *timer2;
@@ -100,6 +111,7 @@ private:
     int auxiliar=0;
     int banderaverificador=0;
     int banderaverificadorvs=0;
+    int puedoguardar=0;
 
 //variables para jugador
     float puntaje1=0;
