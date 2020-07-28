@@ -1,13 +1,31 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
+#include <QLabel>
+#include <QPixmap>
+#include <QtWidgets>
 #include <fstream>
 #include <string.h>
 #include <stdlib.h>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <QString>
+#include <QtGui>
+#include <QImage>
+#include <QSound>
+#include <QGraphicsPixmapItem>// para item:V pues colocar anuncio o texto
+#include <QObject>
 using namespace std;
+
+
+QSound *Cancion=new QSound("C:../versión 13/juego/audio/tetriz.wav");
+QSound *Cancion2=new QSound("C:../versión 13/juego/audio/disparador.wav");
+QSound *Cancion3=new QSound("C:../versión 13/juego/audio/contrapared.wav");
+QSound *Cancion4=new QSound("C:../versión 13/juego/audio/punto.wav");
+QSound *Cancion5=new QSound("C:../versión 13/juego/audio/boton.wav");
+QSound *Cancion6=new QSound("C:../versión 13/juego/audio/mundo22.wav");
+QSound *Cancion7=new QSound("C:../Versión 13/juego/audio/tetriz.wav");
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -21,18 +39,37 @@ MainWindow::MainWindow(QWidget *parent) :
     h_limit=900; //Limites del graphicsview
     v_limit=300;
     nivel=1; //contadorpara determinar los niveles
+
     string a;
+    Cancion->setLoops(10); // Se repite 10 veces la cancion
+    Cancion->play();
+
+
+///////////////////////Arduino, si se logra implementar//////////////////////////////////
+//    serial= new QSerialPort();
+//    arduino_available = false;
+
+//    foreach (const QSerialPortInfo &serial_Info, QSerialPortInfo::availablePorts()) {
+//        qDebug()<<"puerto:"<<serial_Info.portName();
+//        portname = serial_Info.portName();
+//        qDebug() << "vendor iD"<<serial_Info.vendorIdentifier();
+//        vendorId=serial_Info.vendorIdentifier();
+//        qDebug() <<"product id"<<serial_Info.productIdentifier();
+//        productId=serial_Info.productIdentifier();
+//        arduino_available=true;
 ////////////////////////////Tiempos (temporizadores) y escena///////////////////////////////////////////////
 
     timer=new QTimer(this);                 //crea el timer
     timer2=new QTimer(this);
     timer3=new QTimer(this);
     scene=new QGraphicsScene(this);         //crea la scene
-    scene->setSceneRect(-300,-300,1800,900); // Set del retangulo de la escena con los parametros (x,y,ancho,alto)
-    scene->addRect(scene->sceneRect());
+    scene->setSceneRect(120,100,250,120);
+    scene->setBackgroundBrush(QImage("C:../versión 13/juego/audio/c.png"));
+    // Set del retangulo de la escena con los parametros (x,y,ancho,alto)
+    scene->setBackgroundBrush(QImage("C:../versión 13/juego/audio/c.png"));
     ui->graphicsView->setScene(scene);
-    qDebug()<<ui->graphicsView->size();
     this->resize(640, 480);
+    setFixedSize(650,450);// ancho y altura del mainwindow mas no de la view
     qDebug()<<this->size();
 
 ////////////////////////////objetivo//////////////////////////////////////////////////////
@@ -97,6 +134,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->potencia->hide();
     ui->angulo->hide();
     ui->labelnombre->hide();
+    ui->label_fondo->show();
     ui->label->hide();
     ui->label_2->hide();
     ui->label_3->hide();
@@ -151,6 +189,7 @@ void MainWindow::nivelN()
     if(banderaverificadorvs==0 &&objColision(parabolico->getEsf(), objetivo->getEsf())==true)
     {
         contdisparos++;
+        Cancion4->play();
         puntaje=puntaje+100;
         nivel++;
         delete objetivo;
@@ -219,6 +258,7 @@ void MainWindow::nivelN()
 
     if(banderaverificadorvs==1 &&objColision(parabolico->getEsf(), objetivo->getEsf())==true)
     {
+        Cancion4->play();
         delete objetivo;
         if(terminacion==1)
         {
@@ -328,6 +368,7 @@ void MainWindow::nivelN()
     collide=parabolico->collidesWithItem(obstaculo1);
     if(collide==true)
     {
+        Cancion3->play();
         parabolico->getEsf()->setPoint(10,10);
         parabolico->setVxi(0);
         parabolico->setVyi(0);
@@ -389,6 +430,7 @@ void MainWindow::nivelN()
     collide=parabolico->collidesWithItem(obstaculo3);
     if(collide==true)
     {
+        Cancion3->play();
         parabolico->getEsf()->setPoint(10,10);
         parabolico->setVxi(0);
         parabolico->setVyi(0);
@@ -448,8 +490,9 @@ void MainWindow::nivelN()
 ////////////////////////Colison con objeto circular ///////////////////////////////
 
     collide=parabolico->collidesWithItem(obstaculo2);
-    if(collide==true){
-
+    if(collide==true)
+    {
+        Cancion3->play();
         parabolico->getEsf()->setPoint(10,10);
         parabolico->setVxi(0);
         parabolico->setVyi(0);
@@ -459,7 +502,7 @@ void MainWindow::nivelN()
             if(contdisparos==0 && auxiliar ==2)
             {
                 timer->stop();
-                msgBox.setText("YOU LOSS orbita");
+                msgBox.setText("YOU LOSE orbita");
                 msgBox.setInformativeText("");
                 msgBox.exec();
                 close();
@@ -737,7 +780,7 @@ void MainWindow::mover()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-
+    Cancion5->play();
     if(banderaverificador>=1)
     {
         ui->label_4->show();
@@ -760,18 +803,21 @@ void MainWindow::on_pushButton_2_clicked()
         ui->labelnombre->setText(nombre);
         ui->pushButton_7->show();
         ui->pushButton_8->show();
+        ui->label_fondo->show();
     }
 }
 
 
 void MainWindow::on_pushButton_3_clicked()
 {
+    Cancion5->play();
     close();
 }
 
 
 void MainWindow::on_pushButton_4_clicked()
 {
+    Cancion5->play();
     nombre=ui->lineEdit->text();
     if(nombre=="")
     {
@@ -780,23 +826,30 @@ void MainWindow::on_pushButton_4_clicked()
     else
     {
         banderaverificador++;
+        if(banderaverificador>0)
+        {
+            ui->pushButton_2->show();
+        }
     }
 }
 
 
 void MainWindow::on_pushButton_5_clicked()
 {
-    ui->pushButton_2->show();
+    Cancion5->play();
+    //ui->pushButton_2->show();
     ui->pushButton_3->show();
     ui->pushButton_4->show();
     ui->pushButton_5->hide();
     ui->pushButton_6->hide();
     ui->lineEdit->show();
+    ui->label_fondo->show();
 
 }
 
 void MainWindow::on_pushButton_6_clicked()
 {
+    Cancion5->play();
     ui->pushButton_3->hide();
     ui->pushButton_5->hide();
     ui->pushButton_6->hide();
@@ -805,10 +858,12 @@ void MainWindow::on_pushButton_6_clicked()
     ui->label_6JUGADOR2->show();
     ui->lineEdit_2JUGADOR1->show();
     ui->lineEdit_3JUGADOR2->show();
+    ui->label_fondo->show();
 }
 
 void MainWindow::on_REGISTRARVS_clicked()
 {
+    Cancion5->play();
     jugador1= ui->lineEdit_2JUGADOR1->text();
     jugador2= ui->lineEdit_3JUGADOR2->text();
     if(jugador1==""||jugador2=="")
@@ -844,12 +899,14 @@ void MainWindow::on_REGISTRARVS_clicked()
         ui->contavs->display(contdisparos1);
         ui->label_7->show();
         ui->label_8->show();
-        ui->label->show();
+        //ui->label->show();
+        ui->label_fondo->show();
        }
 }
 
 void MainWindow::on_disparovs_clicked()
 {
+    Cancion2->play();
     ui->contavs->display(contdisparos1);
     timer->start(500*t);
     parabolico->getEsf()->setPoint(10,10);
@@ -872,10 +929,13 @@ void MainWindow::on_disparovs_clicked()
 
 void MainWindow::on_pushButton_7_clicked()
 {
+    Cancion5->play();
     string hola;
     string nivelasdf;
     string tiros;
     ifstream archivo;
+    archivo.open("guardar.txt",ios::out| ios::app);
+    archivo.close();
     archivo.open("guardar.txt");
     while(!archivo.eof())
     {
@@ -907,72 +967,73 @@ void MainWindow::on_pushButton_7_clicked()
 
 void MainWindow::on_pushButton_8_clicked()
 {
- QString prueba;
- int contadordelregistro=0;
- string hola;
- string nivelasdf;
- string tiros;
- ifstream archivo;
- archivo.open("guardar.txt", ios::in);
- while(!archivo.eof())
- {
-    archivo>>hola;
-    archivo>>nivelasdf;
-    archivo>>tiros;
-    contadordelregistro++;
-    if(hola==nombre.toStdString())
+    Cancion5->play();
+    QString prueba;
+    int contadordelregistro=0;
+    string hola;
+    string nivelasdf;
+    string tiros;
+    ifstream archivo;
+    archivo.open("guardar.txt", ios::in);
+    while(!archivo.eof())
     {
-        if(nivelasdf=="1")
+        archivo>>hola;
+        archivo>>nivelasdf;
+        archivo>>tiros;
+        contadordelregistro++;
+        if(hola==nombre.toStdString())
         {
-            ui->lcdNumber_2->display(stoi(tiros));
-            ui->lcdNumber_3->display(stoi(nivelasdf));
-            ui->lcdNumber->display(0);
-            puntaje=0;
-            contdisparos=stoi(tiros);
-            controldemundos=stoi(nivelasdf);
-            nivel=1;
-            delete objetivo;
-            objetivo= new graficar(420,100, 30, 0,0,50,0,0);
-            objetivo->actualizar(t,v_limit);
-            scene->addItem(objetivo);
+            if(nivelasdf=="1")
+            {
+                ui->lcdNumber_2->display(stoi(tiros));
+                ui->lcdNumber_3->display(stoi(nivelasdf));
+                ui->lcdNumber->display(0);
+                puntaje=0;
+                contdisparos=stoi(tiros);
+                controldemundos=stoi(nivelasdf);
+                nivel=1;
+                delete objetivo;
+                objetivo= new graficar(420,100, 30, 0,0,50,0,0);
+                objetivo->actualizar(t,v_limit);
+                scene->addItem(objetivo);
+            }
+            if(nivelasdf=="2")
+            {
+                ui->lcdNumber_2->display(stoi(tiros));
+                ui->lcdNumber_3->display(stoi(nivelasdf));
+                ui->lcdNumber->display(400);
+                puntaje=400;
+                contdisparos=stoi(tiros);
+                controldemundos=stoi(nivelasdf);
+                obstaculo1->valores(230,240,20,20);
+                scene->addItem(obstaculo1);
+                nivel=1;
+                delete objetivo;
+                objetivo= new graficar(420,100, 30, 0,0,50,0,0);
+                objetivo->actualizar(t,v_limit);
+                scene->addItem(objetivo);
+            }
+            if(nivelasdf=="3")
+            {
+                ui->lcdNumber_2->display(stoi(tiros));
+                ui->lcdNumber_3->display(stoi(nivelasdf));
+                ui->lcdNumber->display(800);
+                puntaje=800;
+                contdisparos=stoi(tiros);
+                controldemundos=stoi(nivelasdf);
+                scene->addItem(obstaculo2);
+                timer2->stop();
+                timer2->start(17);
+                connect(timer2,SIGNAL(timeout()),this,SLOT(posicion()));
+                obstaculo1->valores(230,240,20,20);
+                scene->addItem(obstaculo1);
+                nivel=1;
+                delete objetivo;
+                objetivo= new graficar(420,100, 30, 0,0,50,0,0);
+                objetivo->actualizar(t,v_limit);
+                scene->addItem(objetivo);
+            }
         }
-        if(nivelasdf=="2")
-        {
-            ui->lcdNumber_2->display(stoi(tiros));
-            ui->lcdNumber_3->display(stoi(nivelasdf));
-            ui->lcdNumber->display(400);
-            puntaje=400;
-            contdisparos=stoi(tiros);
-            controldemundos=stoi(nivelasdf);
-            obstaculo1->valores(230,240,20,20);
-            scene->addItem(obstaculo1);
-            nivel=1;
-            delete objetivo;
-            objetivo= new graficar(420,100, 30, 0,0,50,0,0);
-            objetivo->actualizar(t,v_limit);
-            scene->addItem(objetivo);
-        }
-        if(nivelasdf=="3")
-        {
-            ui->lcdNumber_2->display(stoi(tiros));
-            ui->lcdNumber_3->display(stoi(nivelasdf));
-            ui->lcdNumber->display(800);
-            puntaje=800;
-            contdisparos=stoi(tiros);
-            controldemundos=stoi(nivelasdf);
-            scene->addItem(obstaculo2);
-            timer2->stop();
-            timer2->start(17);
-            connect(timer2,SIGNAL(timeout()),this,SLOT(posicion()));
-            obstaculo1->valores(230,240,20,20);
-            scene->addItem(obstaculo1);
-            nivel=1;
-            delete objetivo;
-            objetivo= new graficar(420,100, 30, 0,0,50,0,0);
-            objetivo->actualizar(t,v_limit);
-            scene->addItem(objetivo);
-        }
-     }
   }
   archivo.close();
 }

@@ -6,6 +6,7 @@
 #include <QGraphicsScene>
 #include <QTimer>
 #include <QFile>
+#include <QImage>
 #include "crear.h"
 #include "graficar.h"
 #include<stdlib.h>
@@ -14,7 +15,6 @@
 #include "objetocuadrado.h"
 #include <QMessageBox>
 #include <QString>
-#include <fstream>
 #include <fstream>
 #include <iostream>
 #include <string.h>
@@ -40,7 +40,7 @@ private slots:
     bool objColision(crear *b, crear *b2);
     void nivelN();
     void mover();
-     void posicion();
+    void posicion();
 
     void on_pushButton_clicked();
 
@@ -80,7 +80,7 @@ private:
     float t;                   //intervalo de tiempo entre frames
     int h_limit;                //longitud en X del mundo
     int v_limit;                //longitud en Y del mundo
-    int nivel;
+    int nivel=1;
     int controldemundos=1;
     int prueba=0;
     int angulo; //value

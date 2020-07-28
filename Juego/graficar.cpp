@@ -20,7 +20,7 @@ QRectF graficar::boundingRect() const
 
 void graficar::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setBrush(Qt::lightGray);        //asigna el color
+    painter->setBrush(Qt::darkMagenta);        //asigna el color
     painter->drawEllipse(boundingRect());    //dibuja una elipse encerrada en la boundingRect
 }
 
