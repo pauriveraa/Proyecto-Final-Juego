@@ -15,5 +15,10 @@
         <file>imagenes/shoot.PNG</file>
         <file>imagenes/signin.png</file>
         <file>imagenes/start.PNG</file>
+        <file>imagenes/atrasestese.png</file>
+        <file>imagenes/instrucciones.jpeg</file>
+        <file>imagenes/INSTRUCCIONES.PNG</file>
+        <file>imagenes/logoard.png</file>
+        <file>imagenes/mutear.PNG</file>
     </qresource>
 </RCC>

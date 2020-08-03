@@ -9,7 +9,7 @@ circulo::circulo()
 
 QRectF circulo::boundingRect() const
 {
-    return QRectF(-15, -15, 30, 30);    //rectángulo que demarca los límites del item gráfico
+    return QRectF(-20, 60, 15, 15);    //rectángulo que demarca los límites del item gráfico
 }
 
 QPainterPath circulo::shape() const

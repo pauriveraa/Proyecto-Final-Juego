@@ -1,4 +1,5 @@
-QT       += core gui multimedia
+QT       += core gui serialport\
+            multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -40,3 +41,24 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     imagenes.qrc
+
+DISTFILES += \
+    juego/1.gif \
+    juego/Giff.gif \
+    juego/ata.wav \
+    juego/boton.wav \
+    juego/c.PNG \
+    juego/contrapared.wav \
+    juego/disparador.wav \
+    juego/logoard.png \
+    juego/mario.wav \
+    juego/mundo1.jpg \
+    juego/mundo2.jpg \
+    juego/mundo22.wav \
+    juego/mundo2sustituto.jpg \
+    juego/mundo3.jpg \
+    juego/oe.gif \
+    juego/plays1.wav \
+    juego/punto.wav \
+    juego/qtaudio_windows.dll \
+    juego/tetriz.wav

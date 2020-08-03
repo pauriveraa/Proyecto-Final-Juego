@@ -1,2 +1,4 @@
 et 1 8
 paubla 2 12
+pau 2 11
+maira 3 12

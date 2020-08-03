@@ -1,6 +1,5 @@
 #include "crear.h"
 #include <QDebug>
-//#define densidad 1
 #define pi 3.14
 
 crear::crear(float x, float y, float r, float vxi, float vyi, float m,
