@@ -94,7 +94,7 @@ private:
     int nivel=1;
     int controldemundos=1;
     int prueba=0;
-    int angulo; //value
+    int angulo=0; //value
     int potencia; //value
     void bordercollision(crear *b);   //metodo para las colisiones con los bordes del mundo
     graficar*parabolico; //circulo a lanzar con tiro parabolico

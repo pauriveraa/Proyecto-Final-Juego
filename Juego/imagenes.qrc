@@ -20,5 +20,7 @@
         <file>imagenes/INSTRUCCIONES.PNG</file>
         <file>imagenes/logoard.png</file>
         <file>imagenes/mutear.PNG</file>
+        <file>imagenes/play.jpg</file>
+        <file>imagenes/play2.jpg</file>
     </qresource>
 </RCC>

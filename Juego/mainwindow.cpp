@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QMessageBox>
 #include <QDebug>
 #include <fstream>
 #include <QLabel>
@@ -18,7 +19,7 @@
 #include <QObject>
 using namespace std;
 
-
+///////////////////////// Creo objetos de la clase QSound ///////////////////////////////////////////////////
 QSound *Cancion=new QSound("C:../versión 13/juego/ata.wav");
 QSound *Cancion2=new QSound("C:../versión 13/juego/disparador.wav");
 QSound *Cancion3=new QSound("C:../versión 13/juego/contrapared.wav");
@@ -27,15 +28,18 @@ QSound *Cancion5=new QSound("C:../versión 13/juego/boton.wav");
 QSound *Cancion6=new QSound("C:../versión 13/juego/mundo22.wav");
 QSound *Cancion7=new QSound("C:../Versión 13/juego/tetriz.wav");
 
+
+/////////////////////////////////////////////Inicializo parámetros con constructor/////////////////////////////////////////
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     x=y=i=10; //Datos para cambiar posición del objeto con trayectoria circular
     rad=0.01745329252; //angulo en radianes para variar la posición del objeto con trayectoria circular
     potencia=0; //value de potencia
-    //angulo=0;
+    angulo=0;
     t=0.01; //"tiempo" cada cuánto va dibujar los objetos objetivo  parabolico con la funcion actualizar
     h_limit=900; //Limites del graphicsview para colisiones
     v_limit=300;
@@ -45,12 +49,12 @@ MainWindow::MainWindow(QWidget *parent) :
     Cancion->play();
 
 
-///////////////////////Arduino, si se logra implementar//////////////////////////////////
+///////////////////////////////////Implementación con arduino//////////////////////////////////////////////
 
-    serial= new QSerialPort();
-    arduino_available = false;
+    serial= new QSerialPort(); //Creo objeto de la clase QSerialPort
+    arduino_available = false; //Inicializo bandera para señalar si hay arduino conectado
 
-    foreach (const QSerialPortInfo &serial_Info, QSerialPortInfo::availablePorts())
+    foreach (const QSerialPortInfo &serial_Info, QSerialPortInfo::availablePorts()) //Detectar información del arduino
     {
         qDebug()<<"puerto:"<<serial_Info.portName();
         portname = serial_Info.portName();
@@ -58,22 +62,22 @@ MainWindow::MainWindow(QWidget *parent) :
         vendorId=serial_Info.vendorIdentifier();
         qDebug() <<"product id"<<serial_Info.productIdentifier();
         productId=serial_Info.productIdentifier();
-        arduino_available=true;
+        arduino_available=true; //Si hay detección de estos parámetros, indico que hay un arduino conectado
     }
 ///////////////////////////////// Si se detecta arduino//////////////////////////////////////////////
     if(arduino_available)
     {
-        arduino_init();
-        ui->label_14->show();
+        arduino_init(); //Llamo este método si hay un arduino conectado.
+        ui->label_14->show();  //Muestro logo de arduino
     }
 ////////////////////////////Pongo en escena el gif con mi nombre////////////////////////////////////////////
 
     ui->label_11->setWindowFlag(Qt::FramelessWindowHint);
     ui->label_11->setMask((new QPixmap("C:../versión 13/juego/Giff.gif"))->mask());
-    QMovie *movie=new QMovie("C:../versión 13/juego/Giff.gif");
-    ui->label_11->setMovie(movie);
-    movie->start();
-    ui->label_11->show();
+    QMovie *movie=new QMovie("C:../versión 13/juego/Giff.gif"); //Creo objeto de la clase QMovie
+    ui->label_11->setMovie(movie); //Agrego el giff a este label
+    movie->start(); //Play al giff para que no quede como imagen
+    ui->label_11->show(); //Pongo en escena el giff
 
 ////////////////////////////Tiempos (temporizadores) y escena///////////////////////////////////////////////
 
@@ -86,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->setBackgroundBrush(QImage("C:../versión 13/juego/mundo1.jpg"));
     ui->graphicsView->setScene(scene);
     this->resize(640, 480);
-    setFixedSize(650,450);// ancho y altura del mainwindow mas no de la view
+    setFixedSize(650,400);// ancho y altura del mainwindow mas no de la view
     qDebug()<<this->size();
 
 ////////////////////////////objetivo//////////////////////////////////////////////////////
@@ -94,7 +98,7 @@ MainWindow::MainWindow(QWidget *parent) :
     objetivo= new graficar(420,100, 30, 0,0,50,0,0); //Se crea objeto al cual se le debe pegar para ganar puntos
     objetivo->actualizar(t,v_limit);  //Se actualiza posicion del objeto en base al tiempo y el limite del graphicview
     scene->addItem(objetivo); //Se pone el objeto en escena
-
+    msgBox.setWindowTitle("SPACE");
 
 //////////////////Agrego un lcd para mostrar puntaje y contador de disparos////////////////////
 
@@ -105,16 +109,18 @@ MainWindow::MainWindow(QWidget *parent) :
 /////////////////////////////pendulo//////////////////////////////////////////////////////
 
      QBrush brush(Qt::black); //pintar el objeto
+     //Parámetros de posición y dimensiones
      x1_obstaculo3 = 200.0;
      y1_obstaculo3 = 0.0;
      x2_obstaculo3 = 0.0;
      y2_obstaculo3 = 0.0;
      radio1_obstaculo3 = 15.0;
      radio2_obstaculo3 = 15.0;
+     //Creo el objeto con los parámetros y determino valor de magnitud
      obstaculo3 = scene->addEllipse(x1_obstaculo3+200,  y1_obstaculo3,radio1_obstaculo3, radio2_obstaculo3, pen, brush);
      magnitud = sqrt(pow(x1_obstaculo3 - x2_obstaculo3, 2.0)+ pow(y1_obstaculo3 - y2_obstaculo3, 2.0)); //Distancia entre dos puntos
-     connect(timer3,SIGNAL(timeout()),this,SLOT(mover()));
-     timer3->start(20);
+     connect(timer3,SIGNAL(timeout()),this,SLOT(mover())); //Conecto el reloj con el método mover
+     timer3->start(20); //Inicio en reloj
 
 
 //////////////////////////////////Bolita tiro parabolico///////////////////////////////////
@@ -216,7 +222,7 @@ Según el valor de nivel cambiarán los parámetros con los que se crea el objet
     */
     if(banderaverificadorvs==0 &&objColision(parabolico->getEsf(), objetivo->getEsf())==true)
     {
-        scene->setBackgroundBrush(QImage("C:../versión 13/juego/mundo1.jpg"));
+        //scene->setBackgroundBrush(QImage("C:../versión 13/juego/mundo1.jpg"));
         Cancion4->play();
         contdisparos++; //Lleva conteo de disparos en modo single
         puntaje=puntaje+100; //Incrementa la variavle puntaje en modo single
@@ -471,7 +477,9 @@ incrementa la variable puntaje
 
                 // JUGADOR 2 ESTABA ACTIVADO(banderajugador2==1)
                 //Determino cuál de los dos jugadores es el ganador
-                if(banderajugador2==1 && puntaje1<puntaje2&&contdisparos1==0) //Si bandera jugador es 1 y contdisparos1 es cero
+                if(banderajugador2==1 && puntaje1<puntaje2&&contdisparos1==0)
+                //Si bandera jugador es 1 y contdisparos1 es cero habrá finalizado el jugador 2
+                //y verificamos si hay un ganador o empate.
                 {
                     msgBox.setText("GANADOR JUGADOR 2");
                     msgBox.setInformativeText("");
@@ -502,38 +510,41 @@ incrementa la variable puntaje
     if(collide==true)
     {
         Cancion3->play();
+        //Pongo al objeto tiro parabolico en su posición inicial
         parabolico->getEsf()->setPoint(10,10);
         parabolico->setVxi(0);
         parabolico->setVyi(0);
-        if(contdisparos==0||contdisparos1==0)
+        if(contdisparos==0||contdisparos1==0) //Determino si han finalizado partida en alguno de los modos
         {
-            auxiliar= auxiliar+1;
-            if(contdisparos==0 && auxiliar ==2)
+            auxiliar= auxiliar+1; //visador de que el juego está por terminar
+            if(contdisparos==0 && auxiliar ==2) //Finalización en el modo single
             {
-                controladorarduino=1;
+                controladorarduino=1; //Detengo el interruptor para no recibir señal después de iniciada la partida
                 timer->stop(); //Detengo reloj de objeto parabolico
                 msgBox.setText("YOU LOSE pendulo");
                 msgBox.setInformativeText("");
                 msgBox.exec();
                 close();
             }
-            if(contdisparos1==0&&auxiliar==2)
+            if(contdisparos1==0&&auxiliar==2) //Reviso si ya finalizó alguno de lo dos jugadores
             {
-                if(banderajugador2==0)
+                if(banderajugador2==0) //Si finaliza el jugador 1, preparo todo para el jugador 2
                 {
                     msgBox.setText("TURNO JUGADOR 2");
                     msgBox.setInformativeText("");
                     msgBox.exec();
                     contdisparos1=4;//recargar
                     ui->contavs->display(contdisparos1);
-                    banderajugador2=1;
-                    nivel1=1;
+                    banderajugador2=1; //Avisador de que inicia el jugador 2
+                    nivel1=1; //Reinicio nivel
                     terminacion=0;
-                    delete objetivo;
-                    objetivo= new graficar(420,100, 30, 0,0,50,0,0);
-                    objetivo->actualizar(t,v_limit);
-                    scene->addItem(objetivo);
+                    delete objetivo; //Borro el objetivo que ya existía
+                    objetivo= new graficar(420,100, 30, 0,0,50,0,0); //Creo objetivo con parámetros de nivel 1
+                    objetivo->actualizar(t,v_limit); //Actualizo valores
+                    scene->addItem(objetivo); //Pongo en escena el objetivo
                 }
+                //Si ambos jugadores finalizaron, decido si hubo ganador o empate
+                //Con estos tres if que comparan sus puntajes
                 if(banderajugador2==1 && puntaje1<puntaje2&&contdisparos1==0)
                 {
                     msgBox.setText("GANADOR JUGADOR 2");
@@ -561,7 +572,8 @@ incrementa la variable puntaje
 
 ////////////////////////Colison con objeto circular ///////////////////////////////
 
-    collide=parabolico->collidesWithItem(obstaculo2);
+//Se toman y modifican los mismos parámetros que en la colisión con los dos obstaculos anteriores
+    collide=parabolico->collidesWithItem(obstaculo2); //Si hay colisión con el obstáculo 2, retorna true
     if(collide==true)
     {
         Cancion3->play();
@@ -584,6 +596,7 @@ incrementa la variable puntaje
             if(contdisparos1==0&&auxiliar==2)
             {
                 if(banderajugador2==0)
+                    //Inicializo variables para jugador 2
                 {
                     msgBox.setText("TURNO JUGADOR 2");
                     msgBox.exec();
@@ -597,7 +610,7 @@ incrementa la variable puntaje
                     objetivo->actualizar(t,v_limit);
                     scene->addItem(objetivo);
                 }
-
+                //Defino un ganador del vs
                 if(banderajugador2==1 && puntaje1<puntaje2&&contdisparos1==0)
                 {
                     msgBox.setText("GANADOR JUGADOR 2");
@@ -631,7 +644,7 @@ incrementa la variable puntaje
 /////////////////////////////Colisión con los bordes///////////////////////////////////
 
 void MainWindow::bordercollision(crear *b)
-//Funcion para detectar clision entre el objeto parabolico y los limites.
+//Funcion para detectar colision entre el objeto parabolico y los limites.
 {
     if(b->getX()<= b->getR())
     {
@@ -644,35 +657,36 @@ void MainWindow::bordercollision(crear *b)
         parabolico->getEsf()->setPoint(10,10); //UBICO EN LA POSICION INICIAL
         parabolico->setVxi(0);
         parabolico->setVyi(0);
-        if(contdisparos==0||contdisparos1==0)
+        if(contdisparos==0||contdisparos1==0) //Verifico que hayan finalizado en los dos modos
         {
-            auxiliar= auxiliar+1;
-            if(contdisparos==0 && auxiliar ==2)
+            auxiliar= auxiliar+1; //Avisador de que está por terminar el juego
+            if(contdisparos==0 && auxiliar ==2) //Finaliza el modo single
             {
-                controladorarduino=1;
+                controladorarduino=1; //Finalizo la intervención del arduino
                 timer->stop();
                 msgBox.setText("YOU LOSE muroderecha");
                 msgBox.setInformativeText("");
                 msgBox.exec();
                 close();
             }
-            if(contdisparos1==0&&auxiliar==2)
+            if(contdisparos1==0&&auxiliar==2) //Verifico si los jugadores del vs terminaron su turno
             {
-                if(banderajugador2==0)
+                if(banderajugador2==0) //Si finalizó el jugador 1, reinicio variables para el jugador 2
                 {
                     msgBox.setText("TURNO JUGADOR 2");
                     msgBox.setInformativeText("");
                     msgBox.exec();
                     contdisparos1=4;
                     ui->contavs->display(contdisparos1);
-                    banderajugador2=1;
+                    banderajugador2=1; //Bandera para indicar turno del jugador 2
                     nivel1=1;
                     terminacion=0;
-                    delete objetivo;
-                    objetivo= new graficar(420,100, 30, 0,0,50,0,0);
+                    delete objetivo; //Elimino objetivo que ya existe con ciertos parámetros.
+                    objetivo= new graficar(420,100, 30, 0,0,50,0,0); //Creo objetivo con parámetros de nivel 1
                     objetivo->actualizar(t,v_limit);
                     scene->addItem(objetivo);
                 }
+                //Determino quién gana el juego con tres if que comparan puntajes
                 if(banderajugador2==1 && puntaje1<puntaje2&&contdisparos1==0)
                 {
                     msgBox.setText("GANADOR JUGADOR 2");
@@ -700,16 +714,15 @@ void MainWindow::bordercollision(crear *b)
 
     if(b->getY()<=b->getR()) // limite inferior
         //PARA DETERMINAR SI HAY COLISION ENTRE EL OBJETO PARABOLICO Y EL  LIMITE INFERIOR
+        //Se tienen en cuenta los mismos parámetros de la colision con el limite derecho
     {
-        //b->setVel(b->getVx(),-b->getcRest()*b->getVy());
-        //b->setPoint(b->getX(),b->getR());
         parabolico->getEsf()->setPoint(10,10);
         parabolico->setVxi(0);
         parabolico->setVyi(0);
         if(contdisparos==0||contdisparos1==0)
         {
             auxiliar= auxiliar+1;
-            if(contdisparos==0 && auxiliar ==2)
+            if(contdisparos==0 && auxiliar ==2) //Finaliza el modo single
             {
                 controladorarduino=1;
                 timer->stop();
@@ -720,7 +733,7 @@ void MainWindow::bordercollision(crear *b)
             }
             if(contdisparos1==0&&auxiliar==2)
             {
-                if(banderajugador2==0)
+                if(banderajugador2==0) //Reinicio parámetros ara jugador 2 orque ya terminó el jugadorr 1
                 {
                      msgBox.setText("TURNO JUGAADOR 2");
                      msgBox.setInformativeText("");
@@ -735,7 +748,7 @@ void MainWindow::bordercollision(crear *b)
                      objetivo->actualizar(t,v_limit);
                      scene->addItem(objetivo);
                 }
-
+                //Determino quién fue el ganador
                 if(banderajugador2==1 && puntaje1<puntaje2&&contdisparos1==0)
                 {
                      msgBox.setText("GANADOR JUGADOR 2");
@@ -744,6 +757,8 @@ void MainWindow::bordercollision(crear *b)
                      close();
                 }
                 if(banderajugador2==1 && puntaje1>puntaje2&&contdisparos1==0)
+
+
                 {
                      msgBox.setText("GANADOR JUGADOR 1");
                      msgBox.setInformativeText("");
@@ -768,14 +783,19 @@ void MainWindow::bordercollision(crear *b)
 }
 
 void MainWindow::actualizar()
+//Función que actualiza valores de mi objeto parabólico y si hay colisión con los bordes o obstáculos
 {
     bordercollision(parabolico->getEsf());
-    parabolico->actualizar(t,v_limit);
+    parabolico->actualizar(t,v_limit); //Actualizo
     nivelN();
 }
 
 void MainWindow::arduino_init()
 {
+    //Método que verifica nombre del puerto, que el serial.begin coincida, que haya lectrura y escritura
+    //en el puerto y realiza la conección entre lo que hay en el serial y el método serial read que toma
+    //decisiones con a informacion que llega
+
     serial->setPortName(portname);
     serial->setBaudRate(QSerialPort::Baud9600);
     serial->setDataBits(QSerialPort::Data8);
@@ -934,7 +954,7 @@ void MainWindow::mover()
 }
 
 void MainWindow::on_pushButton_2_clicked()
-{
+{   controladorarduino=0;
     //Funcion para ingresar al modo single, esconden los botones, label que sean necesarios y se muestran otros
     ui->label_14->hide(); //imagen arduino
     Cancion5->play();
@@ -963,13 +983,15 @@ void MainWindow::on_pushButton_2_clicked()
             ui->pushButton_7->show();
             ui->pushButton_8->show();
             ui->label_11->hide();
-           // ui->label_fondo->show();
+            ui->pushButton_9->show();
+            ui->mutear->show();
+
         }
         if(controldemundos==3) //si contol de mundo es 3se cambia el fondo del graphicview y otros detalles
         {
             Cancion5->stop();
             puntaje=800;
-            scene->setBackgroundBrush(QImage("C:../versión 13/juego/mundo3.jpg"));
+            scene->setBackgroundBrush(QImage("C:../versión 13/juego/mundo3.jpg")); //Imagen del mundo 3
             scene->addItem(obstaculo2); //pongo en escena objeto trayectoria circular
             obstaculo1->valores(230,240,20,20); //determino valores del objeto cuadrado
             scene->addItem(obstaculo1); //pongo en escena objeto cuadrado
@@ -979,6 +1001,7 @@ void MainWindow::on_pushButton_2_clicked()
             Cancion6->stop();
             Cancion7->setLoops(10); // Se repite 10 veces la cancion
             Cancion7->play();
+            //Muestro estos lcd´s, label, botones...
             ui->label_4->show();
             ui->lcdNumber_3->show();
             ui->lcdNumber_3->display(controldemundos);
@@ -1059,7 +1082,6 @@ void MainWindow::on_pushButton_6_clicked()
     ui->lineEdit_2JUGADOR1->show();
     ui->lineEdit_3JUGADOR2->show();
     ui->label_14->hide();
-    //ui->label_fondo->show();
 }
 
 void MainWindow::on_REGISTRARVS_clicked()
@@ -1067,20 +1089,21 @@ void MainWindow::on_REGISTRARVS_clicked()
     //Boton para hacer registro en modo vs
     Cancion5->play();
     ui->label_11->hide();
-    jugador1= ui->lineEdit_2JUGADOR1->text();
-    jugador2= ui->lineEdit_3JUGADOR2->text();
+    jugador1= ui->lineEdit_2JUGADOR1->text(); //Lo que hay en line edit lo almaceno el la variable jugador 1
+    jugador2= ui->lineEdit_3JUGADOR2->text(); //Lo que hay en line edit lo almaceno el la variable jugador 2
     if(jugador1==""||jugador2=="")
-        //Debe haber alg escrito en ambos, sino, no podrá ingresar
+        //Debe haber algo escrito en ambos, sino, no podrá ingresar
     {
-        banderaverificadorvs=0;
+        banderaverificadorvs=0; //No incializa el vs
         msgBox.setText("DEBES REGISTRAR 2 USUARIOS");
         msgBox.setInformativeText("");
         msgBox.exec();
     }
     else
     {
-        //si ya tienen acceso al vs depues de haber registrado correctamente
+        //si ya tienen acceso al vs despues de haber registrado correctamente
         banderaverificadorvs=1; //cambio a 1, señal de que estamos en vs y no single
+        //Se muestran estos label, lcd´s, pushbutton...
         ui->label_5JUGADOR1->hide();
         ui->label_6JUGADOR2->hide();
         ui->REGISTRARVS->hide();
@@ -1091,7 +1114,7 @@ void MainWindow::on_REGISTRARVS_clicked()
         ui->potencia->show();
         ui->graphicsView->show();
         obstaculo1->valores(230,240,20,20);
-        scene->addItem(obstaculo1); //agrego obstaculo cuadrado a la escena
+        scene->addItem(obstaculo1); //agrego obstaculo cuadrado a la escena para definir como un mundo 2
         ui->disparovs->show();
         ui->label_5->show();
         ui->label_6->show();
@@ -1104,33 +1127,34 @@ void MainWindow::on_REGISTRARVS_clicked()
         ui->contavs->display(contdisparos1);
         ui->label_7->show();
         ui->label_8->show();
-        //ui->label_fondo->show();
        }
 }
 
 void MainWindow::on_disparovs_clicked()
 {
     if(contdisparos1!=0)
-//siempre que hayan disparos hao lo mismo que en el modo single
+//siempre que hayan disparos hago lo mismo que en el modo single
     {
         Cancion2->play();
         ui->contavs->display(contdisparos1);
-        timer->start(500*t);
+        timer->start(500*t);//Inicializo el reloj
+        //Defino parámetros iniciales para el objeto tiro parabolico
         parabolico->getEsf()->setPoint(10,10);
-        int vxi=potencia*cos(angulo*M_PI/180);
-        int vyi=potencia*sin(angulo*M_PI/180);
-        parabolico->setVxi(vxi*2);
-        parabolico->setVyi(vyi*2);
-        parabolico->actualizar(t,v_limit);
-        scene->addItem(parabolico);
-        if(contdisparos1 > 0)
+        int vxi=potencia*cos(angulo*M_PI/180); // Vario la veocidad en x segun el valor del slider angulo y paso a radianes
+        int vyi=potencia*sin(angulo*M_PI/180); // Vario la veocidad en y segun el valor del slider angulo y paso a radianes
+        parabolico->setVxi(vxi*2); //Para duplicar la velocidad en el eje x
+        parabolico->setVyi(vyi*2); //Para duplicar la velocidad en el eje y
+        parabolico->actualizar(t,v_limit); //Actualizo posicion y otros parametros
+        scene->addItem(parabolico); //Pongo en escena el objeto
+
+        if(contdisparos1 > 0) //Descontar disparos
         {
-            contdisparos1=contdisparos1-1;
+            contdisparos1=contdisparos1-1; //Descuento los disparos cada vez que lance.
         }
         ui->contavs->display(contdisparos1);
-        if(contdisparos1==1)
+        if(contdisparos1==1) // Solo queda un disparo y está a punto de finalizar
         {
-            auxiliar=1;
+            auxiliar=1; //Es un avisador para que a través de auxiliar acabe la simulación
         }
     }
 }
@@ -1176,9 +1200,10 @@ void MainWindow::on_pushButton_7_clicked()
 
 void MainWindow::on_pushButton_8_clicked()
 {
+    //Función para cargar partida sgún el nombre registrado
     Cancion5->play();
     QString prueba;
-    int contadordelregistro=0;
+    int contadordelregistro=0; //
     string hola;
     string nivelasdf;
     string tiros;
@@ -1190,10 +1215,12 @@ void MainWindow::on_pushButton_8_clicked()
         archivo>>nivelasdf;
         archivo>>tiros;
         contadordelregistro++;
-        if(hola==nombre.toStdString()) //verifico que el nombre ingreado exista
+        if(hola==nombre.toStdString()) //verifico si el nombre ingresado existe
         {
-            if(nivelasdf=="1"&&controldemundos==1) //verifico en qué mundo guardó
+            //verifico en qué mundo guardó
+            if(nivelasdf=="1"&&controldemundos==1)
             {
+                //Si es el mundo 1, reinicio las variables relacinadas
                 ui->lcdNumber_2->display(stoi(tiros));
                 ui->lcdNumber_3->display(stoi(nivelasdf));
                 ui->lcdNumber->display(0);
@@ -1201,14 +1228,15 @@ void MainWindow::on_pushButton_8_clicked()
                 contdisparos=stoi(tiros);
                 controldemundos=stoi(nivelasdf);
                 nivel=1;
-                delete objetivo;
-                objetivo= new graficar(420,100, 30, 0,0,50,0,0);
-                objetivo->actualizar(t,v_limit);
-                scene->setBackgroundBrush(QImage("C:../versión 13/juego/mundo1.jpg"));
-                scene->addItem(objetivo);
+                delete objetivo; //Elimino el objetivo que se mostró al iniciar partida
+                objetivo= new graficar(420,100, 30, 0,0,50,0,0); //Creo objetivo con parámteros del mundo 1
+                objetivo->actualizar(t,v_limit); //Actualizo parámetros de posición y otros
+                scene->setBackgroundBrush(QImage("C:../versión 13/juego/mundo1.jpg")); //Fondo del mundo 1
+                scene->addItem(objetivo);  //Pongo en escena el objetivo
             }
             if(nivelasdf=="2"&&controldemundos<=2)
             {
+                //Parámtros correspondientes al mundo 2
                 ui->lcdNumber_2->display(stoi(tiros));
                 ui->lcdNumber_3->display(stoi(nivelasdf));
                 ui->lcdNumber->display(400);
@@ -1230,6 +1258,7 @@ void MainWindow::on_pushButton_8_clicked()
             }
             if(nivelasdf=="3"&&controldemundos<=3)
             {
+                //Parametros correspondientes al mundo 3
                 ui->lcdNumber_2->display(stoi(tiros));
                 ui->lcdNumber_3->display(stoi(nivelasdf));
                 ui->lcdNumber->display(800);
@@ -1261,20 +1290,23 @@ void MainWindow::on_pushButton_8_clicked()
 
 void MainWindow::on_pushButton_9_clicked()
 {
+    //Método-Botón para mostrar las instrucciones del juego
     Cancion5->play();
     ui->label_15->show();
-    ui->pushButton_10->show();
+    ui->pushButton_10->show(); //Activo botón atrás
 }
 
 void MainWindow::on_pushButton_10_clicked()
 {
+    //Método-Botón para dejar de mostrar las instrucciones del juego
     Cancion5->play();
-    ui->label_15->hide();
-    ui->pushButton_10->hide();
+    ui->label_15->hide(); //Oculto las instrucciones
+    ui->pushButton_10->hide(); //Oculto el botón atrás
 }
 
 void MainWindow::on_mutear_clicked()
 {
+    //Detengo las canciones, en cada mundo se reroducen y se deben volver a pausar si se desea
     Cancion->stop();
     //Cancion1->play();
     Cancion2->stop();
